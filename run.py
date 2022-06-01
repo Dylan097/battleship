@@ -7,4 +7,14 @@ def get_player_name():
     return name
 
 
+def get_board_size(name, section):
+    """
+    Gets the board size the player would like to play with
+    """
+    sect_size = input(f'What {section} size do you want to play with {name}\n')
+    return sect_size
+
+
 player_name = get_player_name()
+row_size = get_board_size(player_name, 'row')
+col_size = get_board_size(player_name, 'column')
