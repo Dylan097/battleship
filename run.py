@@ -1,3 +1,6 @@
+from random import randint
+
+
 def get_player_name():
     """
     Gets the name of the player
