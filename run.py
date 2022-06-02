@@ -24,7 +24,7 @@ def get_player_name():
     Gets the name of the player
     """
     name = input('What is your name:\n')
-    print(f"Hello {name}, let's play some battleship!")
+    print(f"Hello {name}, let's play some battleship!\n")
     return name
 
 
@@ -32,8 +32,30 @@ def get_board_size(name):
     """
     Gets the board size the player would like to play with
     """
-    size = input(f'What grid size do you want to play with {name}:\n')
+    while True:
+        size = input(f'What grid size do you want to play with {name}:\n')
+        if validate_board_size(size):
+            print(f'Playing with grid size {size}')
+            break
     return size
+
+
+def validate_board_size(size):
+    """
+    Inside the try, converts size into an integer.
+    Raises ValueError if size cannot be converted into an integer
+    or if size is less than 4
+    """
+    try:
+        int(size)
+        if int(size) < 4:
+            raise ValueError(
+                f'the board size should be greater than 3! You entered {size}'
+            )
+    except ValueError as e:
+        print(f'Invalid data: {e}! Please try again!\n')
+        return False
+    return True
 
 
 player_name = get_player_name()
