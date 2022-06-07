@@ -23,9 +23,33 @@ def get_player_name():
     """
     Gets the name of the player
     """
-    name = input('What is your name:\n')
-    print(f"Hello {name}, let's play some battleship!\n")
+    while True:
+        name = input('What is your name:\n')
+        if check_player_name(name):
+            print(f"Hello {name}, let's play some battleship!\n")
+            break
     return name
+
+
+def check_player_name(name):
+    """
+    Checks if player name isn't a number and
+    isn't blank
+    """
+    try:
+        if name.isnumeric():
+            raise ValueError(
+                f'You entered {name}. Expected a word'
+            )
+        elif not(name and not name.isspace()):
+            raise ValueError(
+                'Expected a name, you input nothing'
+            )
+        else:
+            return True
+    except ValueError as e:
+        print(f'Invalid data: {e}! Please try again')
+        return False
 
 
 def get_board_size(name):
