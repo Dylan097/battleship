@@ -45,11 +45,10 @@ def check_player_name(name):
             raise ValueError(
                 'Expected a name, you input nothing'
             )
-        else:
-            return True
     except ValueError as e:
         print(f'Invalid data: {e}! Please try again')
         return False
+    return True
 
 
 def get_board_size(name):
