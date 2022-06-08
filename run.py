@@ -17,6 +17,11 @@ class GameBoard:
         self.type = type
         self.guesses = []
         self.ships = []
+    
+
+    def print(self):
+        for row in self.board:
+            print(' '.join(row))
 
 
 def get_player_name():
@@ -82,4 +87,8 @@ def validate_board_size(size):
 
 
 player_name = get_player_name()
-board_size = get_board_size(player_name)
+board_size = int(get_board_size(player_name))
+player = GameBoard(board_size, 4, player_name, 'player')
+computer = GameBoard(board_size, 4, 'Computer', 'computer')
+player.print()
+computer.print()
