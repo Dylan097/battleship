@@ -114,9 +114,23 @@ def populate_board(board):
     """
     Adds ships to the gameboard
     """
-    x_position = random_point(board_size)
-    y_position = random_point(board_size)
+    while True:
+        x_position = random_point(board_size)
+        y_position = random_point(board_size)
+        if valid_coordinates(x_position, y_position, board):
+            break
     board.add_ship(x_position, y_position, board.type)
+
+
+def valid_coordinates(x, y, board):
+    """
+    Validates the given position on the board
+    """
+    if len(board.ships) < 4:
+        for position in board.ships:
+            if position == (x, y):
+                return False
+        return True
 
 
 player_name = get_player_name()
