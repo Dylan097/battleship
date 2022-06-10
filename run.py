@@ -110,9 +110,23 @@ def validate_board_size(size):
     return True
 
 
+def populate_board(board):
+    """
+    Adds ships to the gameboard
+    """
+    x_position = random_point(board_size)
+    y_position = random_point(board_size)
+    board.add_ship(x_position, y_position, board.type)
+
+
 player_name = get_player_name()
 board_size = int(get_board_size(player_name))
 player = GameBoard(board_size, 4, player_name, 'player')
 computer = GameBoard(board_size, 4, 'Computer', 'computer')
+for _ in range(4):
+    populate_board(player)
+    print(player.ships)
+    populate_board(computer)
+    print(computer.ships)
 player.print()
 computer.print()
