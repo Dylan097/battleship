@@ -30,7 +30,7 @@ class GameBoard:
             self.board[x][y] = '*'
             return 'Hit'
         else:
-            return 'Miss'
+            return 'Missed'
     
     def add_ship(self, x, y, type='computer'):
         if len(self.ships) >= self.num_ships:
@@ -122,14 +122,42 @@ def populate_board(board):
     board.add_ship(x_position, y_position, board.type)
 
 
+def make_guess(board):
+    """
+    Asks for a guess on the board.
+    Guess is random if it's the computers turn
+    """
+    if board.type == 'player':
+        while True:
+            row = int(input('Guess a row:\n'))
+            column = int(input('Guess a column:\n'))
+            if valid_coordinates(row, column, computer):
+                print(f'Player guessed: ({row}, {column})')
+                result = computer.guess(row, column)
+                print(f'Player {result} this time!')
+                break
+    else:
+        while True:
+            row = random_point(board_size)
+            column = random_point(board_size)
+            if valid_coordinates(row, column, player):
+                print(f'Computer guessed: ({row}, {column})')
+                result = player.guess(row, column)
+                print(f'Computer {result} this time!')
+                break
+
+
 def valid_coordinates(x, y, board):
     """
     Validates the given position on the board
     """
     if len(board.ships) < 4:
-        for position in board.ships:
-            if position == (x, y):
-                return False
+        if (x, y) in board.ships:
+            return False
+        return True
+    else:
+        if (x, y) in board.guesses:
+            return False
         return True
 
 
@@ -139,8 +167,14 @@ player = GameBoard(board_size, 4, player_name, 'player')
 computer = GameBoard(board_size, 4, 'Computer', 'computer')
 for _ in range(4):
     populate_board(player)
-    print(player.ships)
     populate_board(computer)
-    print(computer.ships)
+print(f"{player_name}'s board:")
 player.print()
+print("Computer's board:")
+computer.print()
+make_guess(player)
+make_guess(computer)
+print(f"{player_name}'s board:")
+player.print()
+print("Computer's board:")
 computer.print()
