@@ -135,7 +135,7 @@ def make_guess(board):
                 print(f'Player guessed: ({row}, {column})')
                 result = computer.guess(row, column)
                 print(f'Player {result} this time!')
-                break
+                return result
     else:
         while True:
             row = random_point(board_size)
@@ -144,7 +144,7 @@ def make_guess(board):
                 print(f'Computer guessed: ({row}, {column})')
                 result = player.guess(row, column)
                 print(f'Computer {result} this time!')
-                break
+                return result
 
 
 def valid_coordinates(x, y, board):
@@ -161,6 +161,27 @@ def valid_coordinates(x, y, board):
         return True
 
 
+def play_game(player, computer):
+    """
+    Creates a loop that makes the game run.
+    Runs until player exits or there's a winner
+    """
+    while True:
+        print(f"{player_name}'s board:")
+        player.print()
+        print("Computer's board:")
+        computer.print()
+        player_guess = make_guess(player)
+        computer_guess = make_guess(computer)
+        if player_guess == 'Hit':
+            scores['player'] = scores['player'] + 1
+        if computer_guess == 'Hit':
+            scores['computer'] = scores['computer'] + 1
+        p = scores['player']
+        c = scores['computer']
+        print(f'{player_name}: {p}. Computer: {c}')
+
+
 player_name = get_player_name()
 board_size = int(get_board_size(player_name))
 player = GameBoard(board_size, 4, player_name, 'player')
@@ -168,13 +189,4 @@ computer = GameBoard(board_size, 4, 'Computer', 'computer')
 for _ in range(4):
     populate_board(player)
     populate_board(computer)
-print(f"{player_name}'s board:")
-player.print()
-print("Computer's board:")
-computer.print()
-make_guess(player)
-make_guess(computer)
-print(f"{player_name}'s board:")
-player.print()
-print("Computer's board:")
-computer.print()
+play_game(player, computer)
