@@ -179,6 +179,10 @@ def play_game(player, computer):
     Creates a loop that makes the game run.
     Runs until player exits or there's a winner
     """
+    print('Starting game\n')
+    print(f'Game size is {board_size}\n')
+    print('Top left of the board is (0, 0)\n')
+    print('4 ships in the game\n')
     while True:
         print(f"{player_name}'s board:")
         player.print()
