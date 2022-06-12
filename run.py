@@ -110,44 +110,44 @@ def validate_board_size(size):
     return True
 
 
-def populate_board(board):
+def populate_board(board, size):
     """
     Adds ships to the gameboard
     """
     while True:
-        x_position = random_point(board_size)
-        y_position = random_point(board_size)
-        if valid_coordinates(x_position, y_position, board):
+        x_position = random_point(size)
+        y_position = random_point(size)
+        if valid_coordinates(x_position, y_position, board, size):
             break
     board.add_ship(x_position, y_position, board.type)
 
 
-def make_guess(board):
+def make_guess(board, size):
     """
     Asks for a guess on the board.
     Guess is random if it's the computers turn
     """
-    if board.type == 'player':
+    if board.type == 'computer':
         while True:
             row = input('Guess a row:\n')
             column = input('Guess a column:\n')
-            if valid_coordinates(row, column, computer):
+            if valid_coordinates(row, column, board, size):
                 print(f'Player guessed: ({row}, {column})')
-                result = computer.guess(int(row), int(column))
+                result = board.guess(int(row), int(column))
                 print(f'Player {result} this time!')
                 return result
     else:
         while True:
-            row = random_point(board_size)
-            column = random_point(board_size)
-            if valid_coordinates(row, column, player):
+            row = random_point(size)
+            column = random_point(size)
+            if valid_coordinates(row, column, board, size):
                 print(f'Computer guessed: ({row}, {column})')
-                result = player.guess(int(row), int(column))
+                result = board.guess(int(row), int(column))
                 print(f'Computer {result} this time!')
                 return result
 
 
-def valid_coordinates(x, y, board):
+def valid_coordinates(x, y, board, size):
     """
     Validates the given position on the board
     """
@@ -163,56 +163,74 @@ def valid_coordinates(x, y, board):
                 raise ValueError(
                     f'you already guessed coordinates ({x},{y})'
                 )
-            elif int(x) > board_size-1 or int(y) > board_size-1:
+            elif int(x) > size-1 or int(y) > size-1:
                 raise ValueError(
                     f'coordinates ({x},{y}) are out of range'
                 )
         except ValueError as e:
-            if board == computer:
+            if board.type == 'computer':
                 print(f'Invalid data: {e}, please try again')
             return False
         return True
 
 
-def play_game(player, computer):
+def play_game(player, computer, size, name):
     """
     Creates a loop that makes the game run.
     Runs until player exits or there's a winner
     """
     print('Starting game\n')
-    print(f'Game size is {board_size}\n')
+    print(f'Game size is {size}\n')
     print('Top left of the board is (0, 0)\n')
     print('4 ships in the game\n')
     while True:
-        print(f"{player_name}'s board:")
+        print(f"{name}'s board:")
         player.print()
         print("Computer's board:")
         computer.print()
-        player_guess = make_guess(player)
-        computer_guess = make_guess(computer)
+        player_guess = make_guess(computer, size)
+        computer_guess = make_guess(player, size)
         if player_guess == 'Hit':
             scores['player'] = scores['player'] + 1
         if computer_guess == 'Hit':
             scores['computer'] = scores['computer'] + 1
         p = scores['player']
         c = scores['computer']
-        print(f'{player_name}: {p}. Computer: {c}')
+        print(f'{name}: {p}. Computer: {c}')
         if p == 4 and c == 4:
             print("It's a draw!")
             break
         elif p == 4:
-            print(f'{player_name} won!')
+            print(f'{name} won!')
             break
         elif c == 4:
             print('Computer won!')
             break
+        exit_game = input("Press 'e' to exit or any key to continue\n")
+        if exit_game == 'e':
+            print('Exiting game...\n')
+            break
 
 
-player_name = get_player_name()
-board_size = int(get_board_size(player_name))
-player = GameBoard(board_size, 4, player_name, 'player')
-computer = GameBoard(board_size, 4, 'Computer', 'computer')
-for _ in range(4):
-    populate_board(player)
-    populate_board(computer)
-play_game(player, computer)
+def new_game():
+    """
+    Starts a new game
+    """
+    while True:
+        player_name = get_player_name()
+        board_size = int(get_board_size(player_name))
+        player = GameBoard(board_size, 4, player_name, 'player')
+        computer = GameBoard(board_size, 4, 'Computer', 'computer')
+        for _ in range(4):
+            populate_board(player, board_size)
+            populate_board(computer, board_size)
+        play_game(player, computer, board_size, player_name)
+        next = input("Press 'e' to exit or any key to start a new game\n")
+        if next == 'e':
+            print('Exiting game...')
+            break
+        else:
+            print('Starting another game...\n')
+
+
+new_game()
