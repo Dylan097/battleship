@@ -129,11 +129,11 @@ def make_guess(board):
     """
     if board.type == 'player':
         while True:
-            row = int(input('Guess a row:\n'))
-            column = int(input('Guess a column:\n'))
+            row = input('Guess a row:\n')
+            column = input('Guess a column:\n')
             if valid_coordinates(row, column, computer):
                 print(f'Player guessed: ({row}, {column})')
-                result = computer.guess(row, column)
+                result = computer.guess(int(row), int(column))
                 print(f'Player {result} this time!')
                 return result
     else:
@@ -142,7 +142,7 @@ def make_guess(board):
             column = random_point(board_size)
             if valid_coordinates(row, column, player):
                 print(f'Computer guessed: ({row}, {column})')
-                result = player.guess(row, column)
+                result = player.guess(int(row), int(column))
                 print(f'Computer {result} this time!')
                 return result
 
@@ -156,7 +156,20 @@ def valid_coordinates(x, y, board):
             return False
         return True
     else:
-        if (x, y) in board.guesses:
+        try:
+            int(x)
+            int(y)
+            if (int(x), int(y)) in board.guesses:
+                raise ValueError(
+                    f'you already guessed coordinates ({x},{y})'
+                )
+            elif int(x) > board_size-1 or int(y) > board_size-1:
+                raise ValueError(
+                    f'coordinates ({x},{y}) are out of range'
+                )
+        except ValueError as e:
+            if board == computer:
+                print(f'Invalid data: {e}, please try again')
             return False
         return True
 
@@ -180,6 +193,15 @@ def play_game(player, computer):
         p = scores['player']
         c = scores['computer']
         print(f'{player_name}: {p}. Computer: {c}')
+        if p == 4 and c == 4:
+            print("It's a draw!")
+            break
+        elif p == 4:
+            print(f'{player_name} won!')
+            break
+        elif c == 4:
+            print('Computer won!')
+            break
 
 
 player_name = get_player_name()
